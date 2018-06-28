@@ -4,9 +4,9 @@ from rnn.train_model import train
 train_new_model = True
 
 if train_new_model:
-    textgen = CharGen(name="Shakespeare")
+    char_gen = CharGen(name="Shakespeare")
     train(text_filepath='shakespeare.txt',
-          textgen=textgen,
+          chargen=char_gen,
           num_epochs=25,
           bidirectional=True,
           rnn_size=128,

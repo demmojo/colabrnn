@@ -12,12 +12,12 @@ from keras.preprocessing import sequence
 from .utils import *
 
 
-def train(text_filepath, textgen, num_epochs=50, gen_epochs=1, batch_size=1024, dropout=0.05, train_size=0.8,
+def train(text_filepath, chargen, num_epochs=50, gen_epochs=1, batch_size=1024, dropout=0.05, train_size=0.8,
           verbose=1, validation=True, gen_text_length=500, train_new_model=True, **kwargs):
     """Trains new model as well as generates samples and saves weights after a specified number of epochs.
 
     :param text_filepath: the filepath of the text to be trained
-    :param textgen: the CharGen instance
+    :param chargen: the CharGen instance
     :param num_epochs: number of epochs that model should be trained for (default 50)
     :param gen_epochs: number of epochs after which it generates samples at different temperatures (default 1)
     :param batch_size: number of training examples used in one iteration (default 1024)
@@ -34,18 +34,18 @@ def train(text_filepath, textgen, num_epochs=50, gen_epochs=1, batch_size=1024, 
         texts = [f.read()]
 
         print("Training a {}LSTM model with {}-layers each with {} cells".format(
-            'Bidirectional ' if textgen.config['bidirectional'] else '',
-            textgen.config['rnn_layers'], textgen.config['rnn_size']
+            'Bidirectional ' if chargen.config['bidirectional'] else '',
+            chargen.config['rnn_layers'], chargen.config['rnn_size']
         ))
 
         if train_new_model:
             print('Training a new model...')
-            if textgen.vocab_filepath is None:
-                textgen.build_vocab(texts)
-            textgen.model = chargen_model(textgen.num_of_classes,
+            if chargen.vocab_filepath is None:
+                chargen.build_vocab(texts)
+            chargen.model = chargen_model(chargen.num_of_classes,
                                           dropout=dropout,
-                                          cfg=textgen.config)
-            textgen.save_files()
+                                          cfg=chargen.config)
+            chargen.save_files()
 
         # calculate all of the combinations of token indices and text indices
         list_of_indices = [np.meshgrid(np.array(i), np.arange(
@@ -54,7 +54,7 @@ def train(text_filepath, textgen, num_epochs=50, gen_epochs=1, batch_size=1024, 
 
         # Remove the two extra indices
         # Remove initial sequence with padding
-        list_of_indices = list_of_indices[textgen.config['input_length']:-2, :]
+        list_of_indices = list_of_indices[chargen.config['input_length']:-2, :]
 
         indices_mask = np.random.rand(list_of_indices.shape[0]) < train_size
 
@@ -63,7 +63,7 @@ def train(text_filepath, textgen, num_epochs=50, gen_epochs=1, batch_size=1024, 
         if train_size < 1.0 and validation:
             list_of_indices_val = list_of_indices[~indices_mask, :]
             gen_val = generate_sequences_from_texts(
-                texts, list_of_indices_val, textgen, batch_size)
+                texts, list_of_indices_val, chargen, batch_size)
             val_steps = max(
                 int(np.floor(list_of_indices_val.shape[0] / batch_size)), 1)
 
@@ -77,7 +77,7 @@ def train(text_filepath, textgen, num_epochs=50, gen_epochs=1, batch_size=1024, 
         steps_per_epoch = max(int(np.floor(num_tokens / batch_size)), 1)
 
         gen = generate_sequences_from_texts(
-            texts, list_of_indices, textgen, batch_size)
+            texts, list_of_indices, chargen, batch_size)
 
         base_lr = 4e-3
 
@@ -85,12 +85,12 @@ def train(text_filepath, textgen, num_epochs=50, gen_epochs=1, batch_size=1024, 
         def lr_linear_decay(epoch):
             return (base_lr * (1 - (epoch / num_epochs)))
 
-        textgen.model.fit_generator(gen, steps_per_epoch=steps_per_epoch,
+        chargen.model.fit_generator(gen, steps_per_epoch=steps_per_epoch,
                                     epochs=num_epochs,
                                     callbacks=[
                                         LearningRateScheduler(lr_linear_decay),
-                                        GenerateAfterEpoch(textgen, gen_epochs, gen_text_length), save_model_weights(
-                                            textgen.config['name'])],
+                                        GenerateAfterEpoch(chargen, gen_epochs, gen_text_length), save_model_weights(
+                                            chargen.config['name'])],
                                     verbose=verbose,
                                     max_queue_size=2,
                                     validation_data=gen_val,
