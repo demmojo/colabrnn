@@ -11,7 +11,7 @@ if train_new_model:
           bidirectional=True,
           rnn_size=128,
           rnn_layers=3,
-          batch_size=1024,
+          batch_size=512,
           embedding_dims=75,
           train_new_model=train_new_model)
 
