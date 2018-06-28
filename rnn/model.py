@@ -48,13 +48,26 @@ def new_rnn_layer(cfg, layer_num):
     :param layer_num: ordinal number of the rnn layer being built
     :return: 3D tensor if return sequence is True
     """
+    has_gpu = len(K.tensorflow_backend._get_available_gpus()) > 0
+    if has_gpu:
+        print('Training on GPU...')
+        if cfg['bidirectional']:
+            return Bidirectional(CuDNNLSTM(cfg['rnn_size'],
+                                           return_sequences=True),
+                                 name='rnn_{}'.format(layer_num))
 
-    print('Training on GPU...')
-    if cfg['bidirectional']:
-        return Bidirectional(CuDNNLSTM(cfg['rnn_size'],
-                                       return_sequences=True),
-                             name='rnn_{}'.format(layer_num))
+        return CuDNNLSTM(cfg['rnn_size'],
+                         return_sequences=True,
+                         name='rnn_{}'.format(layer_num))
+    else:
+        print('Training on CPU...')
+        if cfg['bidirectional']:
+            return Bidirectional(LSTM(cfg['rnn_size'],
+                                      return_sequences=True,
+                                      recurrent_activation='sigmoid'),
+                                 name='rnn_{}'.format(layer_num))
 
-    return CuDNNLSTM(cfg['rnn_size'],
-                     return_sequences=True,
-                     name='rnn_{}'.format(layer_num))
+        return LSTM(cfg['rnn_size'],
+                    return_sequences=True,
+                    recurrent_activation='sigmoid',
+                    name='rnn_{}'.format(layer_num))
