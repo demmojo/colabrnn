@@ -60,6 +60,7 @@ def new_rnn_layer(cfg, layer_num):
                          return_sequences=True,
                          name='rnn_{}'.format(layer_num))
     else:
+        print('Training on CPU...')
         if cfg['bidirectional']:
             return Bidirectional(LSTM(cfg['rnn_size'],
                                       return_sequences=True,
