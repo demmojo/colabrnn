@@ -15,11 +15,11 @@ if train_new_model:
           embedding_dims=75,
           train_new_model=train_new_model)
 
-    print(textgen.model.summary())
+    print(char_gen.model.summary())
 else:
-    textgen = CharGen(name='Test',
+    chargen = CharGen(name='Test',
                       weights_filepath='/weights/Test_weights.hdf5',
                       vocab_filepath='/vocabulary/Test_vocab.json',
                       config_filepath='config/Test_config.json')
 
-    train('shakespeare.txt', textgen, train_new_model=train_new_model, num_epochs=1)
+    train('shakespeare.txt', chargen, train_new_model=train_new_model, num_epochs=1)
