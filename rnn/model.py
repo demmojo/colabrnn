@@ -50,6 +50,7 @@ def new_rnn_layer(cfg, layer_num):
     """
     has_gpu = len(K.tensorflow_backend._get_available_gpus()) > 0
     if has_gpu:
+        print('Training on GPU...')
         if cfg['bidirectional']:
             return Bidirectional(CuDNNLSTM(cfg['rnn_size'],
                                            return_sequences=True),
