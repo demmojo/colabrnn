@@ -17,9 +17,9 @@ if train_new_model:
 
     print(char_gen.model.summary())
 else:
-    chargen = CharGen(name='Test',
-                      weights_filepath='/weights/Test_weights.hdf5',
-                      vocab_filepath='/vocabulary/Test_vocab.json',
-                      config_filepath='config/Test_config.json')
+    chargen = CharGen(name='Shakespeare',
+                      weights_filepath='shakespeare_weights.hdf5',
+                      vocab_filepath='shakespeare_vocab.json',
+                      config_filepath='shakespeare_config.json')
 
-    train('shakespeare.txt', chargen, train_new_model=train_new_model, num_epochs=1)
+    train('shakespeare.txt', chargen, train_new_model=train_new_model, num_epochs=10)
