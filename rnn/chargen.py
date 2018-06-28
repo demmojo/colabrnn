@@ -44,7 +44,7 @@ class CharGen:
 
 
 
-    def generate(self, n=1, temps=[0.3, 0.6, 1.0], gen_text_length=300, prefix=None, **kwargs):
+    def generate(self, n=1, temps=[0.3, 0.6, 1.0], gen_text_length=500, prefix=None, **kwargs):
         """Generates as well as returns a single text at each temperature.
 
         :param n: Number of texts generated at each temperature (default 1)

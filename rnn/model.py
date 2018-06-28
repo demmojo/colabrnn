@@ -42,32 +42,32 @@ def chargen_model(num_of_classes, cfg, weights_filepath=None, dropout=0.05, opti
     return model
 
 
-def new_rnn_layer(cfg, layer_num):
+def new_rnn_layer(cfg, num_layer):
     """Creates new RNN layer for each parameter depending on whether it is bidirectional LSTM or not.
     :param cfg: configuration of CharGen instance
-    :param layer_num: ordinal number of the rnn layer being built
+    :param num_layer: ordinal number of the rnn layer being built
     :return: 3D tensor if return sequence is True
     """
-    has_gpu = len(K.tensorflow_backend._get_available_gpus()) > 0
-    if has_gpu:
-        print('Training on GPU...')
+    gpu_no = len(K.tensorflow_backend._get_available_gpus())
+    if gpu_no > 0:
+        print('GPU is available...')
         if cfg['bidirectional']:
             return Bidirectional(CuDNNLSTM(cfg['rnn_size'],
                                            return_sequences=True),
-                                 name='rnn_{}'.format(layer_num))
+                                 name='rnn_{}'.format(num_layer))
 
         return CuDNNLSTM(cfg['rnn_size'],
                          return_sequences=True,
-                         name='rnn_{}'.format(layer_num))
+                         name='rnn_{}'.format(num_layer))
     else:
-        print('Training on CPU...')
+        print('No GPU available...')
         if cfg['bidirectional']:
             return Bidirectional(LSTM(cfg['rnn_size'],
                                       return_sequences=True,
                                       recurrent_activation='sigmoid'),
-                                 name='rnn_{}'.format(layer_num))
+                                 name='rnn_{}'.format(num_layer))
 
         return LSTM(cfg['rnn_size'],
                     return_sequences=True,
                     recurrent_activation='sigmoid',
-                    name='rnn_{}'.format(layer_num))
+                    name='rnn_{}'.format(num_layer))
