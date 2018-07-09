@@ -12,23 +12,43 @@ class CharGen:
         'rnn_size': 128,
         'input_length': 60,
         'bidirectional': True,
-        'embedding_dims': 150
+        'embedding_dims': 75
     }
     default_config = config.copy()
 
-    def __init__(self, weights_filepath=None,
+    def __init__(self,
+                 bidirectional=True,
+                 rnn_layers=3,
+                 input_length=60,
+                 rnn_size=128,
+                 embedding_dims=75,
+                 weights_filepath=None,
                  vocab_filepath=None,
                  config_filepath=None,
                  name='CharGen'):
+
+
+
+        # Update model default model configuration
+        self.config.update({'name': name})
+        self.default_config.update({'name': name})
+        self.config.update({'bidirectional': bidirectional})
+        self.default_config.update({'bidirectional': bidirectional})
+        self.config.update({'rnn_layers': rnn_layers})
+        self.default_config.update({'rnn_layers': rnn_layers})
+        self.config.update({'rnn_size': rnn_size})
+        self.default_config.update({'rnn_size': rnn_size})
+        self.config.update({'input_length': input_length})
+        self.default_config.update({'input_length': input_length})
+        self.config.update({'embedding_dims': embedding_dims})
+        self.default_config.update({'embedding_dims': embedding_dims})
+
+        self.vocab_filepath = vocab_filepath
 
         if config_filepath is not None:
             with open(config_filepath, 'r',
                       encoding='utf8', errors='ignore') as json_file:
                 self.config = json.load(json_file)
-
-        self.config.update({'name': name})
-        self.default_config.update({'name': name})
-        self.vocab_filepath = vocab_filepath
 
         if vocab_filepath is not None:
             with open(vocab_filepath, 'r', encoding='utf8', errors='ignore') as json_file:
