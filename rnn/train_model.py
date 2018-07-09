@@ -1,4 +1,4 @@
-from keras.callbacks import LearningRateScheduler, Callback
+from keras.callbacks import LearningRateScheduler, Callback, EarlyStopping
 from keras.models import Model, load_model
 from keras.preprocessing import sequence
 from keras.preprocessing.text import Tokenizer, text_to_word_sequence
@@ -90,7 +90,9 @@ def train(text_filepath, chargen, num_epochs=50, gen_epochs=1, batch_size=1024, 
                                     callbacks=[
                                         LearningRateScheduler(lr_linear_decay),
                                         GenerateAfterEpoch(chargen, gen_epochs, gen_text_length), save_model_weights(
-                                            chargen.config['name'])],
+                                            chargen.config['name']),
+                                        EarlyStopping(monitor='val_loss', min_delta=0, patience=4,
+                                                      verbose=0, mode='auto')],
                                     verbose=verbose,
                                     max_queue_size=2,
                                     validation_data=gen_val,
