@@ -1,4 +1,4 @@
-from keras.callbacks import LearningRateScheduler, Callback, EarlyStopping
+from keras.callbacks import LearningRateScheduler, Callback, EarlyStopping, ModelCheckpoint
 from keras.models import Model, load_model
 from keras.preprocessing import sequence
 from keras.preprocessing.text import Tokenizer, text_to_word_sequence
