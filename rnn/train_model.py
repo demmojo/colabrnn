@@ -85,7 +85,7 @@ def train(text_filepath, chargen, num_epochs=50, gen_epochs=1, batch_size=1024, 
         def lr_linear_decay(epoch):
             return (base_lr * (1 - (epoch / num_epochs)))
         
-        filepath = 'weights-improved-{epoch:02d}-{val_acc:.2f}.hdf5'
+        filepath = '/weights/weights-improved-{epoch:02d}-{val_acc:.2f}.hdf5'
 
         chargen.model.fit_generator(gen, steps_per_epoch=steps_per_epoch,
                                     epochs=num_epochs,
