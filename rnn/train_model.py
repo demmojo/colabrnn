@@ -84,15 +84,18 @@ def train(text_filepath, chargen, num_epochs=50, gen_epochs=1, batch_size=1024, 
         # inline definition of LearningRateScheduler function
         def lr_linear_decay(epoch):
             return (base_lr * (1 - (epoch / num_epochs)))
+        
+        filepath = 'weights-improved-{epoch:02d}-{val_acc:.2f}.hdf5'
 
         chargen.model.fit_generator(gen, steps_per_epoch=steps_per_epoch,
                                     epochs=num_epochs,
                                     callbacks=[
-                                        LearningRateScheduler(lr_linear_decay),
-                                        GenerateAfterEpoch(chargen, gen_epochs, gen_text_length), save_model_weights(
-                                            chargen.config['name']),
-                                        EarlyStopping(monitor='val_loss', min_delta=0, patience=4,
-                                                      verbose=0, mode='auto')],
+                                              LearningRateScheduler(lr_linear_decay),
+                                              GenerateAfterEpoch(chargen, gen_epochs, gen_text_length), 
+                                              save_model_weights(chargen.config['name']),
+                                              ModelCheckpoint(filepath, verbose=1, save_best_only=True),
+                                              EarlyStopping(monitor='val_loss', min_delta=0, patience=4,
+                                                            verbose=0, mode='auto')],
                                     verbose=verbose,
                                     max_queue_size=2,
                                     validation_data=gen_val,
