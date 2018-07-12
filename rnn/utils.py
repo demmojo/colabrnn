@@ -60,13 +60,13 @@ class GenerateAfterEpoch(Callback):
             self.chargen.generate(
                 gen_text_length=self.gen_text_length)
 
-
-class save_model_weights(Callback):
-    def __init__(self, weights_name):
-        self.weights_name = weights_name
-
-    def on_epoch_end(self, epoch, logs={}):
-        if model_input_size(self.model) > 1:
-            self.model = Model(inputs=self.model.input[0],
-                               outputs=self.model.output[1])
-        self.model.save_weights("{}_weights.hdf5".format(self.weights_name))
+# 
+# class save_model_weights(Callback):
+#     def __init__(self, weights_name):
+#         self.weights_name = weights_name
+#
+#     def on_epoch_end(self, epoch, logs={}):
+#         if model_input_size(self.model) > 1:
+#             self.model = Model(inputs=self.model.input[0],
+#                                outputs=self.model.output[1])
+#         self.model.save_weights("{}_weights.hdf5".format(self.weights_name))

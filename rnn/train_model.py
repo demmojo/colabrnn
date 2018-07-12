@@ -12,7 +12,7 @@ from keras.preprocessing import sequence
 from .utils import *
 
 
-def train(text_filepath, chargen, num_epochs=50, gen_epochs=1, batch_size=1024, dropout=0.2, train_size=0.8,
+def train(text_filepath, chargen, num_epochs=50, gen_epochs=1, batch_size=256, dropout=0.2, train_size=0.8,
           verbose=1, validation=True, gen_text_length=500, train_new_model=True, **kwargs):
     """Trains new model as well as generates samples and saves weights after a specified number of epochs.
 
@@ -90,8 +90,9 @@ def train(text_filepath, chargen, num_epochs=50, gen_epochs=1, batch_size=1024, 
                                     callbacks=[
                                               LearningRateScheduler(lr_linear_decay),
                                               GenerateAfterEpoch(chargen, gen_epochs, gen_text_length),                                           
-                                              ModelCheckpoint(filepath='/weights/weights-improved-{epoch:02d}-{val_acc:.2f}.hdf5',
-                                                              verbose=1, save_best_only=True),
+                                              ModelCheckpoint(
+                                                  filepath='models/weights-improved-{epoch:02d}-{val_loss:.2f}.hdf5',
+                                                  verbose=1, monitor='val_loss', save_best_only=True),
                                               EarlyStopping(monitor='val_loss', min_delta=0, patience=4,
                                                             verbose=0, mode='auto')],
                                     verbose=verbose,

@@ -1,1 +1,1 @@
-{"rnn_layers": 3, "rnn_size": 128, "input_length": 60, "bidirectional": true, "embedding_dims": 150, "name": "colab"}
+{"rnn_layers": 3, "rnn_size": 128, "input_length": 150, "bidirectional": true, "embedding_dims": 100, "name": "shakespeare"}
