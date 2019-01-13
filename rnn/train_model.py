@@ -12,7 +12,7 @@ from keras.preprocessing import sequence
 from .utils import *
 
 
-def train(text_filepath, chargen, num_epochs=50, gen_epochs=1, batch_size=256, dropout=0.2, train_size=0.8,
+def train(text_filepath, chargen, num_epochs=50, gen_epochs=1, batch_size=256, dropout=0.3, train_size=0.8,
           verbose=1, validation=True, gen_text_length=500, train_new_model=True, **kwargs):
     """Trains new model as well as generates samples and saves weights after a specified number of epochs.
 
