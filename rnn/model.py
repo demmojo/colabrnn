@@ -7,7 +7,7 @@ from .WeightedAttentionAverage import WeightedAttentionAverage
 from keras import backend as K
 
 
-def chargen_model(num_of_classes, cfg, weights_filepath=None, dropout=0.05, optimizer=RMSprop(lr=4e-3, rho=0.99)):
+def chargen_model(num_of_classes, cfg, weights_filepath=None, dropout=0.3, optimizer=RMSprop(lr=4e-3, rho=0.99)):
     """Builds the neural network model architecture for CharGen and loads the weights specified for the model.
     :param num_of_classes: total number of classes
     :param cfg: configuration of CharGen
